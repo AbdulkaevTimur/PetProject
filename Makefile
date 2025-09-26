@@ -1,5 +1,3 @@
-# Makefile для создания миграций
-
 DB_DSN := "postgres://postgres:abdul@localhost:5432/postgres?sslmode=disable"
 MIGRATE := migrate -path ./migrations -database $(DB_DSN)
 
