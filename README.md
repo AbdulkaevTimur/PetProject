@@ -29,7 +29,7 @@ PetProject/
 1. make create-container      //Docker
 2. make migrate
 3. make run
-4. Готовая коллекция для Postman: https://github.com/AbdulkaevTimur/PetProject/blob/master/PetProject.postman_collection.json
+4. Готовая коллекция для Postman: https://github.com/AbdulkaevTimur/PetProject/tree/master/docs
 
 
 
