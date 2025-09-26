@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "5b72a396-5c98-4771-bffc-2eeb9ae5133e",
 		"name": "PetProject",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "40842812"
 	},
 	"item": [
@@ -14,26 +14,13 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
+							"bearer": {
+								"token": "{{access_token}}"
+							}
 						},
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "localhost:8080/tasks",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"tasks"
-							]
-						}
+						"url": "localhost:8080/tasks"
 					},
 					"response": []
 				},
@@ -41,27 +28,44 @@
 					"name": "Create task for user",
 					"event": [
 						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"UUID is not empty\", function () {\r",
+									"    pm.expect(jsonData.uuid).to.be.not.empty;\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"taskLastUUID\", jsonData.id);\r",
+									"\r",
+									"console.log(\"Saved Task UUID:\", jsonData.id);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
 							"listen": "prerequest",
 							"script": {
 								"exec": [
 									""
 								],
 								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.environment.set(\"LastUUID\", jsonData.uuid);"
-								],
-								"type": "text/javascript",
-								"packages": {}
+								"packages": {},
+								"requests": {}
 							}
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{taskLastUUID}}"
+							}
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -73,22 +77,19 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "localhost:8080/tasks",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"tasks"
-							]
-						}
+						"url": "localhost:8080/tasks/{{userLastUUID}}"
 					},
 					"response": []
 				},
 				{
 					"name": "Update task",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{taskLastUUID}}"
+							}
+						},
 						"method": "PATCH",
 						"header": [],
 						"body": {
@@ -101,14 +102,21 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/tasks/918f34a5-9b71-4d49-a8e9-277719c954d1",
+							"raw": "localhost:8080/tasks/{{taskLastUUID}}",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"tasks",
-								"918f34a5-9b71-4d49-a8e9-277719c954d1"
+								"{{taskLastUUID}}"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -119,17 +127,7 @@
 					"request": {
 						"method": "DELETE",
 						"header": [],
-						"url": {
-							"raw": "localhost:8080/tasks/918f34a5-9b71-4d49-a8e9-277719c954d1",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"tasks",
-								"918f34a5-9b71-4d49-a8e9-277719c954d1"
-							]
-						}
+						"url": "localhost:8080/tasks/{{taskLastUUID}}"
 					},
 					"response": []
 				}
@@ -148,18 +146,9 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"text\": \"test_task\"\r\n}"
+							"raw": ""
 						},
-						"url": {
-							"raw": "localhost:8080/users",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"users"
-							]
-						}
+						"url": "localhost:8080/users"
 					},
 					"response": []
 				},
@@ -171,32 +160,22 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{userLastUUID}}",
-									"type": "string"
-								}
-							]
+							"bearer": {
+								"token": "{{userLastUUID}}"
+							}
 						},
 						"method": "GET",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"text\": \"test_task\"\r\n}"
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
-						"url": {
-							"raw": "localhost:8080/users/{{userLastUUID}}/tasks",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"users",
-								"{{userLastUUID}}",
-								"tasks"
-							]
-						}
+						"url": "localhost:8080/users/{{userLastUUID}}/tasks"
 					},
 					"response": []
 				},
@@ -215,7 +194,7 @@
 									"\r",
 									"pm.environment.set(\"userLastUUID\", jsonData.id);\r",
 									"\r",
-									"console.log(\"Saved Task UUID:\", jsonData.id);\r",
+									"console.log(\"Saved User UUID:\", jsonData.id);\r",
 									""
 								],
 								"type": "text/javascript",
@@ -227,30 +206,22 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{userLastUUID}}",
-									"type": "string"
-								}
-							]
+							"bearer": {
+								"token": "{{userLastUUID}}"
+							}
 						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"text\": \"test_task\"\r\n}"
+							"raw": "{\r\n    \"email\": \"test@example.com\",\r\n    \"password\": \"example\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
-						"url": {
-							"raw": "localhost:8080/users",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"users"
-							]
-						}
+						"url": "localhost:8080/users"
 					},
 					"response": []
 				},
@@ -261,24 +232,14 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"password\": \"UPDATED@EXAMPLE.COM\"\r\n}",
+							"raw": "{\r\n    \"email\": \"UPDATED@EXAMPLE.COM\",\r\n    \"password\": \"UPDATED\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": {
-							"raw": "localhost:8080/users/{{userLastUUID}}",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"users",
-								"{{userLastUUID}}"
-							]
-						}
+						"url": "localhost:8080/users/{{userLastUUID}}"
 					},
 					"response": []
 				},
@@ -289,19 +250,9 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"password\": \"UPDATED@EXAMPLE.COM\"\r\n}"
+							"raw": ""
 						},
-						"url": {
-							"raw": "localhost:8080/users/{{userLastUUID}}",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"users",
-								"{{userLastUUID}}"
-							]
-						}
+						"url": "localhost:8080/users/{{userLastUUID}}"
 					},
 					"response": []
 				}
